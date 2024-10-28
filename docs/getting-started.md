@@ -84,18 +84,18 @@ jobs:
     name: Lighthouse
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: npm install, build
         run: |
           npm install
           npm run build
       - name: run Lighthouse CI
         run: |
-          npm install -g @lhci/cli@0.8.x
+          npm install -g @lhci/cli@0.14.x
           lhci autorun
 ```
 
@@ -109,11 +109,11 @@ jobs:
 
 ```yaml
 language: node_js
-node_js: v12
+node_js: v16
 addons:
   chrome: stable
 before_install:
-  - npm install -g @lhci/cli@0.8.x
+  - npm install -g @lhci/cli@0.14.x
 script:
   - npm run build
   - lhci autorun
@@ -141,7 +141,7 @@ jobs:
       - browser-tools/install-chrome
       - run: npm install
       - run: npm run build
-      - run: sudo npm install -g @lhci/cli@0.8.x
+      - run: sudo npm install -g @lhci/cli@0.14.x
       - run: lhci autorun
 ```
 
@@ -171,12 +171,12 @@ module.exports = {
 **.gitlab-ci.yml**
 
 ```yaml
-image: cypress/browsers:node14.15.0-chrome86-ff82
+image: cypress/browsers:node16.17.0-chrome106
 lhci:
   script:
     - npm install
     - npm run build
-    - npm install -g @lhci/cli@0.8.x
+    - npm install -g @lhci/cli@0.14.x
     - lhci autorun --upload.target=temporary-public-storage --collect.settings.chromeFlags="--no-sandbox" || echo "LHCI failed!"
 ```
 
@@ -198,7 +198,7 @@ echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sud
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 
 # Add Node's apt-key
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 
 # Install NodeJS and Google Chrome
 sudo apt-get update
@@ -218,7 +218,7 @@ npm run build
 export CHROME_PATH=$(which google-chrome-stable)
 export LHCI_BUILD_CONTEXT__EXTERNAL_BUILD_URL="$BUILD_URL"
 
-npm install -g @lhci/cli@0.8.x
+npm install -g @lhci/cli@0.14.x
 lhci autorun
 ```
 
@@ -256,18 +256,18 @@ module.exports = {
 steps:
   - id: 'install'
     args: ['npm', 'ci']
-    name: node:14-alpine
+    name: node:16-alpine
 
   - id: 'build'
     waitFor: ['install']
-    name: node:14-alpine
+    name: node:16-alpine
     args: ['npm', 'run', 'build']
 
   - id: 'lighthouse'
     waitFor: ['build']
-    name: cypress/browsers:node14.15.0-chrome86-ff82
+    name: cypress/browsers:node16.17.0-chrome106
     entrypoint: '/bin/sh'
-    args: ['-c', 'npm install -g @lhci/cli@0.8.x && lhci autorun --failOnUploadFailure']
+    args: ['-c', 'npm install -g @lhci/cli@0.14.x && lhci autorun --failOnUploadFailure']
     env:
       - 'LHCI_BUILD_CONTEXT__CURRENT_BRANCH=$BRANCH_NAME'
 
@@ -360,20 +360,20 @@ jobs:
     name: Lighthouse
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Use Node.js 10.x
-        uses: actions/setup-node@v1
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 10.x
+          node-version: 16.x
       - name: npm install, build
         run: |
           npm install
           npm run build
       - name: run Lighthouse CI
         run: |
-          npm install -g @lhci/cli@0.8.x
+          npm install -g @lhci/cli@0.14.x
           lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
@@ -471,7 +471,7 @@ Once the server is set up, _on your local laptop or desktop_, make sure you can 
 ```bash
 $ curl https://your-lhci-server.example.com/version # Make sure you can connect to your server.
 0.x.x
-$ npm install -g @lhci/cli@0.8.x # Install the Lighthouse CI CLI.
+$ npm install -g @lhci/cli@0.14.x # Install the Lighthouse CI CLI.
 Installing...
 $ lhci wizard # Use the wizard to create a project.
 ? Which wizard do you want to run? new-project
